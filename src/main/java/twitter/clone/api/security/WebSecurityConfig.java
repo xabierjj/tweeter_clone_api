@@ -37,28 +37,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   UserDetailService userDetailService;
 
-  // @Bean
-  // CorsConfigurationSource corsConfigurationSource() {
-  //   CorsConfiguration configuration = new CorsConfiguration();
-  //   configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-  //   configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-  //   UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-  //   source.registerCorsConfiguration("/**", configuration);
-  //   return source;
-  // }
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+    configuration.addAllowedHeader("*");
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 
-  // @Bean
-  // public Filter corsFilter() {
-  //   UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-  //   CorsConfiguration config = new CorsConfiguration();
-  //   config.setAllowCredentials(true);
-  //   config.addAllowedOrigin("*");
-  //   config.addAllowedHeader("*");
-  //   config.addAllowedMethod("*");
-  //   source.registerCorsConfiguration("/**", config);
  
-  //   return new CorsFilter(source);
-  // }
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -70,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
   
 
-    http.cors().and().csrf().disable().authorizeRequests().antMatchers("/api/authenticate", "/api/user/register")
+    http.cors().and().authorizeRequests().antMatchers("/api/authenticate", "/api/user/register")
         .permitAll().anyRequest().authenticated().and().sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         

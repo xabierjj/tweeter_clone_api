@@ -41,8 +41,6 @@ UserService  userService;
 
     @GetMapping("/follow")
     public ResponseEntity<UserInfoDto> followUser(@RequestParam("id") Long id, Principal principal)throws Exception {
-
-        
         UserInfoDto userInfo =userService.followUser(id,  principal.getName());
         return new ResponseEntity<>(userInfo,HttpStatus.ACCEPTED); 
     }
