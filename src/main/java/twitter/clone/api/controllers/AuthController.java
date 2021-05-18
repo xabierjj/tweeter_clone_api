@@ -1,5 +1,8 @@
 package twitter.clone.api.controllers;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +37,9 @@ public class AuthController {
         Long id = user.getId();
         UserDetails userDetails= userDetailService.loadUserByUsername(username);
         String token = JwtService.generateToken(userDetails);
-
+      
+      
+      
         AuthDto authResponse = new AuthDto(username,token) ;
         return authResponse;
     }

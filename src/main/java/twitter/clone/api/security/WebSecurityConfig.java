@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -60,16 +61,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
   
 
-    http.cors().and().authorizeRequests().antMatchers("/api/authenticate", "/api/user/register")
-        .permitAll().anyRequest().authenticated().and().sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+  
+    http.csrf().disable().authorizeRequests().antMatchers("/api/authenticate", "/api/user/register").permitAll()
+    .anyRequest().authenticated()
+    .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         
         
    // http.addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class);
    
     http.addFilterBefore(jwtAuthorizationFIlter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(exceptionHandlerFilter, JwtAuthorizationFIlter.class);
-
+    http.cors();
     // .and().addFilter(jwtAuthorizationFilter())
 
   }
