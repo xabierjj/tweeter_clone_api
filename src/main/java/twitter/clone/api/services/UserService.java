@@ -79,6 +79,11 @@ public class UserService {
         return userRepository.getFollowers(user.getId(), offset, 10);
     }
 
+    public List<IUser> searchUser(String term) {
+        return userRepository.searchUser(term);
+
+    }
+
 
     public void deleteUser(Long userId) throws Exception  {
         UserModel user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());

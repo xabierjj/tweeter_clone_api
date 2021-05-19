@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import twitter.clone.api.dto.AuthDto;
+import twitter.clone.api.dto.LoginDto;
 import twitter.clone.api.models.UserModel;
 import twitter.clone.api.services.AuthService;
 import twitter.clone.api.services.UserDetailService;
@@ -32,15 +34,16 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/authenticate")
-    public AuthDto authenticate(@RequestParam("username") String username, @RequestParam("password") String password)  throws Exception{
-        UserModel user = authService.authenticate(username, password);
+    public AuthDto authenticate(@RequestBody LoginDto loginDto)  throws Exception{
+       
+        UserModel user = authService.authenticate(loginDto.getUsername(), loginDto.getPassword());
         Long id = user.getId();
-        UserDetails userDetails= userDetailService.loadUserByUsername(username);
+        UserDetails userDetails= userDetailService.loadUserByUsername(loginDto.getUsername());
         String token = JwtService.generateToken(userDetails);
       
       
       
-        AuthDto authResponse = new AuthDto(username,token) ;
+        AuthDto authResponse = new AuthDto(loginDto.getUsername(),token) ;
         return authResponse;
     }
 

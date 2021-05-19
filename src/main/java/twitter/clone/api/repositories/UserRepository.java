@@ -24,4 +24,7 @@ public interface UserRepository extends CrudRepository<UserModel, Long> {
 
 	@Query(value="SELECT U.id, U.username FROM followers AS F INNER JOIN users AS U ON F.user_id = U.id WHERE F.follows=?1  ORDER BY U.username LIMIT ?3 OFFSET ?2", nativeQuery = true)
     List<IUser> getFollowers(Long userId, int offset, int limit);
+
+	@Query(value = "SELECT U.id, U.username FROM users AS U  WHERE U.username LIKE %?1% LIMIT 10", nativeQuery = true)
+    List<IUser> searchUser(String term);
 }
