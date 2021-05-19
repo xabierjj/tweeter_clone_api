@@ -17,7 +17,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface TweetRepository extends CrudRepository <TweetModel, Long>{
     
 
-    @Query(value="SELECT T.id, T.user_id AS user, T.content AS content, T.creation_date  AS created, U.username AS username  FROM followers AS F INNER JOIN tweet AS T ON T.user_id=follows INNER JOIN users AS U ON U.id = T.user_id where F.user_id =?1 ORDER BY T.creation_date LIMIT ?3 OFFSET ?2", nativeQuery = true)
+    @Query(value="SELECT T.id, T.user_id AS user, T.content AS content, T.creation_date  AS created, U.username AS username  FROM followers AS F INNER JOIN tweet AS T ON T.user_id=follows INNER JOIN users AS U ON U.id = T.user_id where F.user_id =?1 ORDER BY T.creation_date DESC LIMIT ?3 OFFSET ?2", nativeQuery = true)
     List<ITweet> getFeed(Long userId, int offset, int limit);
 
    

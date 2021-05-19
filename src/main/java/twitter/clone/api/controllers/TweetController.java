@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import twitter.clone.api.services.TweetService;
 import twitter.clone.api.services.UserService;
 import twitter.clone.api.dto.ITweet;
 import twitter.clone.api.dto.TweetDto;
+import twitter.clone.api.dto.TweetRegisterDto;
 @RestController
 
 @RequestMapping("/api/tweet")
@@ -33,11 +35,12 @@ public class TweetController {
     UserService userService;
 
     @PostMapping
-    public ResponseEntity<TweetModel> saveTweet(@RequestParam("content") String content, Principal principal) throws Exception {
-
-        TweetModel tweet = tweetService.saveTweet(content, principal.getName());
-
-        return new ResponseEntity<>(tweet,HttpStatus.ACCEPTED);
+    public ResponseEntity<TweetDto> saveTweet(@RequestBody TweetRegisterDto tweetRegister, Principal principal) throws Exception {
+        System.out.println("tweetRegister.getContent()");
+        System.out.println(tweetRegister.getContent());
+        TweetModel tweet = tweetService.saveTweet(tweetRegister.getContent(), principal.getName());
+        TweetDto tweetDto = new TweetDto(tweet.getId(),tweet.getContent(), tweet.getCreated(), tweet.getUser().getUsername());
+        return new ResponseEntity<>(tweetDto,HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/feed/{offset}")
