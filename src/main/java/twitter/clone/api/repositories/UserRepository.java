@@ -27,4 +27,7 @@ public interface UserRepository extends CrudRepository<UserModel, Long> {
 
 	@Query(value = "SELECT U.id, U.username FROM users AS U  WHERE U.username LIKE %?1% LIMIT 10", nativeQuery = true)
     List<IUser> searchUser(String term);
+
+	@Query(value = "SELECT  U.id, U.username, U.mail FROM users AS U ORDER BY U.id DESC  LIMIT 10 OFFSET ?1 ", nativeQuery = true )
+	List<IUser> getUsers( int offset);
 }

@@ -45,6 +45,7 @@ public class UserDetailService implements UserDetailsService {
       
         
         UserDetails userDetails = new User(user.getUsername(), user.getPassword(), authorities);
+        
         return userDetails;
     }
 

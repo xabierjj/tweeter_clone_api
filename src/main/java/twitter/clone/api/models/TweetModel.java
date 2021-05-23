@@ -30,9 +30,9 @@ public class TweetModel {
     @Column(name="creation_date")
     private Long created; 
     
-    @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    // @OnDelete(action = OnDeleteAction.CASCADE)
     private UserModel user;
 
     @LazyCollection(LazyCollectionOption.EXTRA) 
@@ -44,6 +44,7 @@ public class TweetModel {
     )
     private List<UserModel> retweeted;
 
+    @Transient
     private  int retweetNumber;
 
     public TweetModel() {

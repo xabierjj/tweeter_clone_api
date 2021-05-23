@@ -19,6 +19,8 @@ public class RestExceptionHandler {
 
 	@ExceptionHandler
 	public ResponseEntity<ErrorDto> handleException(Exception exc) {
+
+		System.out.println("Rest Exception Handler");
 		ErrorDto errorResponse =  new ErrorDto();
 		errorResponse.setError(exc.getMessage());
 		errorResponse.setTimeStamp(System.currentTimeMillis());

@@ -23,12 +23,12 @@ public class FollowersModel {
     @Column(unique = true,nullable = false)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private UserModel user;
 
    
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "follows")
     private UserModel follows;
 

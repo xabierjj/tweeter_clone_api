@@ -33,13 +33,23 @@ public class UserService {
     public UserInfoDto saveUser(String username, String password, String mail) throws Exception {
 
         RoleModel role = roleRepository.findByRole(ERole.ROLE_USER).orElseThrow(() -> new Exception("Role not found"));
+
+        if (userRepository.existsByUsername(username)) {
+            throw new Exception("Username is already in use");
+        }
+
+        if (userRepository.existsByMail(mail)) {
+            throw new Exception("Mail is already in use");
+        }
+
+
         Set<RoleModel> roles = new HashSet<>();
         roles.add(role);
         UserModel user = new UserModel(username, password, mail, roles);
-        UserModel finaluser = userRepository.save(user);
+        
 
-        UserInfoDto userInfo =new UserInfoDto(user.getId(), user.getUsername(), user.getFollowers().size(),
-        user.getFollows().size());
+        UserInfoDto userInfo = new UserInfoDto(user.getId(), user.getUsername(), user.getFollowers().size(),
+                user.getFollows().size(), user.getMail());
         return userInfo;
     }
 
@@ -67,6 +77,25 @@ public class UserService {
 
     }
 
+    public UserInfoDto updateUser(UserInfoDto userUpdate) throws Exception {
+
+        UserModel user = userRepository.findById(userUpdate.getId()).orElseThrow(() -> new UserNotFoundException());
+
+        user.setUsername(userUpdate.getUsername());
+        user.setMail(userUpdate.getMail());
+        userRepository.save(user);
+
+        return userUpdate;
+
+    }
+
+    public List<IUser> getUsers(int offset) throws Exception {
+
+        offset = offset * 10;
+        return userRepository.getUsers(offset);
+
+    }
+
     public List<IUser> getFollowedUsers(String username, int offset) throws Exception {
         UserModel user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException());
 
@@ -75,7 +104,7 @@ public class UserService {
 
     public List<IUser> getFollowers(String username, int offset) throws Exception {
         UserModel user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException());
-
+        offset = offset * 10;
         return userRepository.getFollowers(user.getId(), offset, 10);
     }
 
@@ -84,9 +113,9 @@ public class UserService {
 
     }
 
-
-    public void deleteUser(Long userId) throws Exception  {
+    public void deleteUser(Long userId) throws Exception {
         UserModel user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
         userRepository.delete(user);
     }
+
 }

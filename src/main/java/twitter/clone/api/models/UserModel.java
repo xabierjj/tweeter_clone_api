@@ -1,8 +1,11 @@
 package twitter.clone.api.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -32,33 +34,42 @@ public class UserModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //default nullable is true
     @Column(unique = true,nullable = false)
     private Long id;
     @Column(unique = true,nullable = false)
     private String username;
     @Column(unique = true,nullable = false)
     private String mail;
+    @Column(nullable = false)
     private String password;
 
-    
+    //Tiene que ser eager para cargar los user details
     @ManyToMany(fetch = FetchType.EAGER )
     @JoinTable( name = "user_roles",
         joinColumns = @JoinColumn( name="user_id"),
         inverseJoinColumns = @JoinColumn( name="role_id")
-
         )
     private Set<RoleModel> roles = new HashSet<>();
 
 
+    @OneToMany( mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE  )
+    private List<TweetModel> tweets = new ArrayList<>();
+
+    // ,orphanRemoval = true
+
     @LazyCollection(LazyCollectionOption.EXTRA) 
-    @OneToMany( mappedBy = "user", fetch = FetchType.EAGER, orphanRemoval = true)
+
+    @OneToMany( mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<FollowersModel> follows = new HashSet<>();
     
     @LazyCollection(LazyCollectionOption.EXTRA) 
-    @OneToMany( mappedBy = "follows", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany( mappedBy = "follows", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<FollowersModel> followers = new HashSet<>();
 
 
+    @ManyToMany(mappedBy = "retweeted", fetch = FetchType.LAZY)
+    private List<TweetModel> retweets = new ArrayList<>();
 
     public UserModel(String username, String password, String mail,Set<RoleModel> roles) {
         this.username =username;

@@ -31,23 +31,23 @@ public class JwtAuthorizationFIlter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        System.out.println("JWT");
         final String header = request.getHeader("Authorization");
         String username = null;
-        String jwt = null;  
-       
-
+        String jwt = null;
 
         if (header != null && header.startsWith("Bearer ")) {
             jwt = header.substring(7);
-            System.out.println(jwt);
+
             username = jwtService.extractUsername(jwt);
         }
 
-        if (username!= null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailService.loadUserByUsername(username);
             if (jwtService.validateToken(jwt, userDetails)) {
 
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                        null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

@@ -28,6 +28,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         // TODO Auto-generated method stub
 
         try {
+
+            System.out.println("Exception filter");
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             ErrorDto errorResponse = new ErrorDto(e.getMessage(),System.currentTimeMillis(),HttpStatus.BAD_REQUEST.value());
