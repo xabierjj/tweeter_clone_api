@@ -41,7 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:4200"));
+    configuration.setAllowedOrigins(Arrays.asList("**"));
+    // configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:4200"));
+
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
     configuration.addAllowedHeader("*");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -62,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   
 
   
-    http.csrf().disable().authorizeRequests().antMatchers("/api/authenticate", "/api/user/register").permitAll()
+    http.csrf().disable().authorizeRequests().antMatchers("/api/authenticate","/api/refreshtoken", "/api/user/register").permitAll()
     .anyRequest().authenticated()
     .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         
@@ -71,8 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    
     http.addFilterBefore(jwtAuthorizationFIlter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(exceptionHandlerFilter, JwtAuthorizationFIlter.class);
-    http.cors();
-    // .and().addFilter(jwtAuthorizationFilter())
+  //  http.cors();
+
 
   }
 }

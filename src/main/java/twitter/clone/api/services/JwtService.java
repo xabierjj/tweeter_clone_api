@@ -42,7 +42,12 @@ public class JwtService {
         claims.put("roles", userDetails.getAuthorities());
         return createToken(claims, userDetails.getUsername());
     }
-
+    public String generateRefreshToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("refresh", "REFRESH_TOKEN");
+ 
+        return createToken(claims, username);
+    }
     public String createToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))

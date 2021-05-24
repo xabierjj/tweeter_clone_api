@@ -23,7 +23,7 @@ import twitter.clone.api.services.TweetService;
 import twitter.clone.api.services.UserService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
 
