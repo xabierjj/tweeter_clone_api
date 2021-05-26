@@ -83,12 +83,13 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity logout() throws Exception {
+    public ResponseEntity logout(HttpServletResponse response )throws Exception {
         Cookie cookie = new Cookie("refresh", null);
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         cookie.setPath("/api/refreshtoken"); 
+        response.addCookie(cookie);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
